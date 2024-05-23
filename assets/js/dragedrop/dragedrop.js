@@ -4,10 +4,9 @@ import DraggableElement from './elements/draggableElement.js';
 
 class DragAndDrop {
     constructor(options) {
-        console.log(options);
-        // debugger
-        this.dropZoneHoverClassList = options.dropZones.elementHoverClassList;
+        this.toDrop = options.toDrop;
         this.dropZoneDragClassList = options.dropZones.elementDragClassList;
+        this.dropZoneHoverClassList = options.dropZones.elementHoverClassList;
         this.dragElementDragClassList = options.dragElements.elementOnDragClassList;
         this.dragElementHoverClassList = options.dragElements.elementHoverClassList;
         this.mouse = new Mouse();
@@ -23,28 +22,11 @@ class DragAndDrop {
             new DropZone(el, options.dropZoneClassList,this.mouse, options.dropZones.elementHoverClassList)
         );
 
-        // this.draggableElements = options.draggableElementSelector.map(el => {
-        //     el.addEventListener('mousedown',(e)=>{
-        //         this.pos3 = this.mouse.position.x;
-        //         this.pos4 = this.mouse.position.y;
-        //         this.elementDragging = el;
-
-        //         document.onmousemove = ()=>{
-        //             this.detectDropZone() 
-        //             this.pos1 = this.pos3 - this.mouse.position.x;
-        //             this.pos2 = this.pos4 - this.mouse.position.y;
-        //             this.pos3 = this.mouse.position.x;
-        //             this.pos4 = this.mouse.position.y;
-        //             el.draggable = false;
-        //             el.style.cursor = 'grabbing';
-        //             el.style.position = 'absolute';
-        //             el.style.top = (el.offsetTop - this.pos2) + "px";
-        //             el.style.left = (el.offsetLeft - this.pos1) + "px";
-        //         };
         this.draggableElements = options.dragElements.elementSelector.map(el => {
             let element = new DraggableElement(el,this.dragElementCloneOpacity);
 
             el.addEventListener('mousedown',(e)=>{
+                e.preventDefault();
                 this.pos3 = e.pageX; 
                 this.pos4 = e.pageY; 
                 this.elementDragging = el;
@@ -172,8 +154,6 @@ class DragAndDrop {
     }
 
     actionOnDrop(element){
-        const toDrop = false;
-
         document.onmouseup=null;
         document.onmousemove = null;
         element.deleteClone();
@@ -194,7 +174,7 @@ class DragAndDrop {
             this.dropZoneHit[0].dropZone.element.classList.remove(...this.dropZoneHoverClassList);
             this.elementDragging.classList.remove(...this.dragElementHoverClassList);
 
-            if (toDrop) {
+            if (this.toDrop) {
 
                 this.callbackF(this.elementDragging,this.dropZoneHit[0].dropZone.element);
                 console.log(this.dropZoneHit[0].dropZone.element);

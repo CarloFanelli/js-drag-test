@@ -1,5 +1,5 @@
 class DropZone {
-    constructor(element, classListDrag, classListHover, mouse) {
+    constructor(element, classListDrag, mouse, classListHover ) {
         this.element = element;
         this.classListDrag = classListDrag;
         this.classListHover = classListHover;

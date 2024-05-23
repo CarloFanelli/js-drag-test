@@ -20,6 +20,7 @@ function (e, dropZone) {
 */
 
 const dragAndDrop = new DragAndDrop({
+  toDrop:false,
   dragElements:{
     elementSelector:dragElement, //array of HTML Elements
     elementOnDragClassList:['class-1-drag','class-2-drag','class-3-drag'],

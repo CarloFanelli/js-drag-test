@@ -172,6 +172,8 @@ class DragAndDrop {
     }
 
     actionOnDrop(element){
+        const toDrop = false;
+
         document.onmouseup=null;
         document.onmousemove = null;
         element.deleteClone();
@@ -184,15 +186,27 @@ class DragAndDrop {
         this.dropZones.forEach(dropZone => {
             dropZone.element.classList.remove(...this.dropZoneDragClassList);
         });
-        
+
         if (this.dropZoneHit.length !== 0) {
-                this.dropZoneHit[0].dropZone.element.classList.remove(...this.dropZoneHoverClassList);
-                this.elementDragging.classList.add(...this.dragElementHoverClassList);
-            // this.dropZoneHit[0].dropZone.element.classList.add(this.dropZoneClassList);
 
-            this.callbackF(this.elementDragging,this.dropZoneHit[0].dropZone.element);
+            this.elementDragging.style.width = null;
+            this.elementDragging.style.height = null;
+            this.dropZoneHit[0].dropZone.element.classList.remove(...this.dropZoneHoverClassList);
+            this.elementDragging.classList.remove(...this.dragElementHoverClassList);
+
+            if (toDrop) {
+
+                this.callbackF(this.elementDragging,this.dropZoneHit[0].dropZone.element);
+                console.log(this.dropZoneHit[0].dropZone.element);
+                console.log(this.elementDragging);
+                this.dropZoneHit[0].dropZone.element.append(this.elementDragging);
+                
+            } else {
+                this.callbackF(this.elementDragging,this.dropZoneHit[0].dropZone.element);
+            }
+            
         }
-
+        this.elementDragging = null;
         this.dropZoneHit = [];
     }
     

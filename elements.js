@@ -17,9 +17,9 @@ function createDropZone(){
 
     dropZoneList.forEach(dropZone => {
         const dropMarkup = `
-        <div class="resize-x overflow-auto bg-red-500 p-2 h-full">
+        <div class=" bg-red-500 p-2">
             <h2>${dropZone.title}</h2>
-            <div id=drop-${dropZone.id} class="dropZone border h-20">
+            <div id=drop-${dropZone.id} class="dropZone border p-1">
                 <div class="p-3">
                     <h2>ciao sono una dropzoone : )</h2>
                 </div>

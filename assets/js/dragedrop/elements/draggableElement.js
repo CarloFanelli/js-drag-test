@@ -1,5 +1,5 @@
 class DraggableElement {
-    constructor(element) {
+    constructor(element,cloneOpacity) {
         this.element = element;
         // this.mouse = mouse;
         this.pos1 = this.pos2 = this.pos3 = this.pos4 = 0;
@@ -13,13 +13,14 @@ class DraggableElement {
         // this.detectDropzoneEvent = new Event('detectDropZone');
         // this.createClone();
         this.clone = null;
+        this.cloneOpacity = cloneOpacity;
     }
 
     createClone(){
         this.clone = this.element.cloneNode(true);
         
         this.clone.id = this.element.id + '-cloned';
-        this.clone.style.opacity = '20%';
+        this.clone.style.opacity = this.cloneOpacity + '%';
         this.clone.style.userSelect = 'none';
         // parent.insertAdiacentHTML('beforeend',clone);
         // this.element.position = 'absolute';

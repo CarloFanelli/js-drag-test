@@ -1,16 +1,15 @@
 class DropZone {
-    constructor(element, classList, classListHover, mouse,borderPX = 1) {
+    constructor(element, classListDrag, classListHover, mouse) {
         this.element = element;
-        this.borderPX = borderPX;
-        this.classList = classList;
+        this.classListDrag = classListDrag;
         this.classListHover = classListHover;
         this.mousePosition = mouse;
-        this.addClass(this.classList);
+        // this.addClass(this.classList);
     }
     
-    addClass(classList){
-        this.element.classList.add(classList);
-    }
+    // addClass(classList){
+    //     this.element.classList.add(classList);
+    // }
 
     // removeClass(classList){
     //     this.element.classList.remove(classList);

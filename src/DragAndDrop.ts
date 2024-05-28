@@ -8,8 +8,8 @@ import DropZoneService from "./service/DropZoneService.js"
 import MouseService, { iMousePosition } from "./service/MouseService.js";
 
 export default class DragAndDrop implements iDragAndDrop {
-    dropZoneHoverClass: string[];
-    dropZoneClass: string[];
+    dropZoneHoverClass?: string[];
+    dropZoneClass?: string[];
     dropZoneHit?: iDropZone;
     private dropZones: iDropZone[];
     private draggableElements: iDraggableElement[];
@@ -20,14 +20,14 @@ export default class DragAndDrop implements iDragAndDrop {
     private elementDragging?: HTMLElement;
     private mouseService: MouseService = new MouseService();
 
-    Callback: (elementDragged: HTMLElement, dropZoneHit: HTMLElement) => void;
+    Callback: (elementDragged: HTMLElement, dropZoneHit?: HTMLElement) => void;
 
-    constructor(options: iDragDropOptions, callback: (element: HTMLElement, dropzone: HTMLElement) => void) {
-        this.dropZoneHoverClass = options.dropZoneHoverClass;
-        this.dropZoneClass = options.dropZoneClass;
+    constructor(options: iDragDropOptions, callback: (element: HTMLElement, dropzone?: HTMLElement) => void) {
+        this.dropZoneHoverClass = options.dropZoneHoverClasses;
+        this.dropZoneClass = options.dropZoneClasses;
         this.Callback = callback;
         this.dropZones = options.dropZoneHtmlElements.map(el =>
-            new DropZone(el)
+            new DropZone(el, options.dropZoneClasses, options.dropZoneHoverClasses)
         );
         this.pos1 = 0;
         this.pos2 = 0;
@@ -35,7 +35,13 @@ export default class DragAndDrop implements iDragAndDrop {
         this.pos4 = 0;
 
         this.draggableElements = options.draggableHtmlElements.map(el => {
-            let element = new DraggableElement(el);
+            let element = new DraggableElement
+                (
+                    el,
+                    options.draggedElementCloneOpacity,
+                    options.draggedElementClasses,
+                    options.draggedElementHoverClasses
+                );
 
             el.addEventListener('mousedown', (e) => {
                 this.pos3 = e.pageX;
@@ -44,6 +50,8 @@ export default class DragAndDrop implements iDragAndDrop {
                 el.style.width = el.offsetWidth + 'px';
                 el.style.height = el.offsetHeight + 'px';
                 element.createClone();
+                element.addDragClasses();
+                this.dropZones.forEach((dz) => dz.addDragClasses());
                 el.style.position = 'absolute';
                 document.onmousemove = (e) => {
                     this.mouseService.detectMouse(e);
@@ -69,14 +77,18 @@ export default class DragAndDrop implements iDragAndDrop {
     private detectDropZone() {
         let dropZoneService = new DropZoneService();
         this.dropZones.forEach((dz) => {
+            dz.addDragClasses();
             let zonehit = dropZoneService.detectDropZone(dz, this.mouseService.getPosition());
             if (zonehit) {
-                dz.element.classList.remove(...this.dropZoneClass);
-                dz.element.classList.add(...this.dropZoneHoverClass);
+                dz.removeDragClasses();
+                dz.addHoverClasses();
                 this.dropZoneHit = dz;
             } else {
-                dz.element.classList.remove(...this.dropZoneHoverClass);
-                dz.element.classList.add(...this.dropZoneClass);
+                if (this.dropZoneHit) {
+                    dz.removeHoverClasses();
+                    dz.addDragClasses();
+                    this.dropZoneHit = undefined;
+                }
             }
         });
     }
@@ -84,18 +96,20 @@ export default class DragAndDrop implements iDragAndDrop {
     private actionOnDrop(element: iDraggableElement) {
         document.onmouseup = null;
         document.onmousemove = null;
+        element.removeDragClasses();
+        element.addHoverClasses();
         element.destroyClone();
+        this.dropZones.forEach((dr) => dr.removeDragClasses());
         if (this.elementDragging) {
             this.elementDragging.style.cursor = 'grab';
             this.elementDragging.style.top = "";
             this.elementDragging.style.left = "";
             this.elementDragging.style.position = 'static';
-
+            this.Callback(this.elementDragging, this.dropZoneHit?.element);
             if (this.dropZoneHit) {
-                this.dropZoneHit.element.classList.remove(...this.dropZoneHoverClass);
-                this.Callback(this.elementDragging, this.dropZoneHit.element);
+                this.dropZoneHit.removeHoverClasses();
+
             }
         }
-
     }
 }

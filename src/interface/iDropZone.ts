@@ -1,6 +1,10 @@
 export default interface iDropZone {
     element: HTMLElement;
+    hoverClasses?: string[];
+    draggingClasses?: string[];
 
-    addClass: (classList: string[]) => Boolean
-    removeClass: (classList: string[]) => Boolean
+    addDragClasses: () => void;
+    removeDragClasses: () => void;
+    addHoverClasses: () => void;
+    removeHoverClasses: () => void;
 }

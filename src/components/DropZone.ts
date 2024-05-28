@@ -1,30 +1,33 @@
 import iDropZone from "../interface/iDropZone.js";
-
 export default class DropZone implements iDropZone {
     element: HTMLElement;
+    hoverClasses?: string[];
+    draggingClasses?: string[];
 
-    constructor(element: HTMLElement) {
+    constructor(element: HTMLElement, hoverClasses?: string[], draggingClasses?: string[]) {
         this.element = element;
+        this.hoverClasses = hoverClasses;
+        this.draggingClasses = draggingClasses;
     }
 
-    addClass(classList: Array<string>): boolean {
-        try {
-            this.element.classList.add(...classList);
-            return true;
-        } catch (error) {
-            return false;
+    addDragClasses(): void {
+        if (this.draggingClasses) {
+            this.element.classList.add(...this.draggingClasses);
         }
-
-    }
-
-    removeClass(classList: Array<string>): boolean {
-        try {
-            this.element.classList.remove(...classList);
-            return true;
+    };
+    removeDragClasses(): void {
+        if (this.draggingClasses) {
+            this.element.classList.remove(...this.draggingClasses);
         }
-        catch (error) {
-            return false;
+    };
+    addHoverClasses(): void {
+        if (this.hoverClasses) {
+            this.element.classList.add(...this.hoverClasses);
         }
-    }
-
+    };
+    removeHoverClasses(): void {
+        if (this.hoverClasses) {
+            this.element.classList.remove(...this.hoverClasses);
+        }
+    };
 }

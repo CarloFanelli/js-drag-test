@@ -132,6 +132,7 @@ class DragAndDrop {
                     // dropZone.element.classList.remove(this.dropZoneClassList);
                     dropZone.element.classList.remove(...this.dropZoneDragClassList);
                     dropZone.element.classList.add(...this.dropZoneHoverClassList);
+
                     this.elementDragging.classList.remove(...this.dragElementDragClassList);
                     this.elementDragging.classList.add(...this.dragElementHoverClassList);
                     // dropZone.element.classList.add(this.dropZoneHoverClassList);
@@ -144,8 +145,10 @@ class DragAndDrop {
             //    dropZone.element.classList.remove(this.dropZoneHoverClassList);
                 dropZone.element.classList.remove(...this.dropZoneHoverClassList);
                 dropZone.element.classList.add(...this.dropZoneDragClassList);
+
                 this.elementDragging.classList.remove(...this.dragElementHoverClassList);
                 this.elementDragging.classList.add(...this.dragElementDragClassList);
+                console.log(this.elementDragging.classList);
                 //    dropZone.element.classList.add(this.dropZoneClassList);
             }
             return { isOverDropZone, dropZone };
@@ -177,8 +180,6 @@ class DragAndDrop {
             if (this.toDrop) {
 
                 this.callbackF(this.elementDragging,this.dropZoneHit[0].dropZone.element);
-                console.log(this.dropZoneHit[0].dropZone.element);
-                console.log(this.elementDragging);
                 this.dropZoneHit[0].dropZone.element.append(this.elementDragging);
                 
             } else {

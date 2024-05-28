@@ -20,17 +20,17 @@ function (e, dropZone) {
 */
 
 const dragAndDrop = new DragAndDrop({
-  toDrop:false,
+  toDrop:true,
   dragElements:{
     elementSelector:dragElement, //array of HTML Elements
-    elementOnDragClassList:['class-1-drag','class-2-drag','class-3-drag'],
-    elementHoverClassList:['class-1-hover','class-2-hover','class-3-hover'],
+    elementOnDragClassList:['bg-pink-500','border-2','border-orange-500'],
+    elementHoverClassList:['bg-red-500','border-2','border-yellow-400','text-white'],
     placeholderOpacity: 20 // from 0 to 100
   },
   dropZones:{
     elementSelector:dropZones, //array of HTML Elements
-    elementDragClassList:['class-1-drag','class-2-drag','class-3-drag'],
-    elementHoverClassList:['class-1-hover','class-2-hover','class-3-hover']
+    elementDragClassList:['border-2','border-white-500'],
+    elementHoverClassList:['border','border-blue-500','bg-green-500']
   },
   callback: function(dragElement,dropZone){
     console.log('dragged el: ',dragElement);

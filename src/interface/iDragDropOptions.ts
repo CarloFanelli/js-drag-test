@@ -1,6 +1,9 @@
 export default interface iDragDropOptions {
-    dropZoneHoverClass: string[];
-    dropZoneClass: string[];
+    dropZoneHoverClasses?: string[];
+    dropZoneClasses?: string[];
+    draggedElementClasses?: string[];
+    draggedElementHoverClasses?: string[];
+    draggedElementCloneOpacity?: number;
     dropZoneHtmlElements: HTMLElement[];
     draggableHtmlElements: HTMLElement[];
-}2
+}

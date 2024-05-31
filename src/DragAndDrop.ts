@@ -44,6 +44,7 @@ export default class DragAndDrop implements iDragAndDrop {
                 );
 
             el.addEventListener('mousedown', (e) => {
+                e.preventDefault();
                 this.pos3 = e.pageX;
                 this.pos4 = e.pageY;
                 this.elementDragging = element;
@@ -76,25 +77,23 @@ export default class DragAndDrop implements iDragAndDrop {
 
     private detectDropZone() {
         const dropZoneService = new DropZoneService();
-        this.dropZones.forEach((dz) => {
-            dz.addDragClasses();
-            let zonehit = dropZoneService.detectDropZone(dz, this.mouseService.getPosition());
-            if (zonehit) {
-                this.elementDragging?.removeDragClasses();
-                this.elementDragging?.addHoverClasses();
-                dz.removeDragClasses();
-                dz.addHoverClasses();
-                this.dropZoneHit = dz;
-            } else {
+        const detectedDropzones = dropZoneService.detectDropZone(this.dropZones, this.mouseService.getPosition());
+        const detectedDropzoneHit = detectedDropzones.find(dropzone => dropzone.isOverDropzone)?.dropZone;
+        if (detectedDropzoneHit && detectedDropzoneHit !== this.dropZoneHit) {
+            this.dropZoneHit = detectedDropzoneHit;
+            this.dropZoneHit.removeDragClasses();
+            this.dropZoneHit.addHoverClasses();
+            this.elementDragging?.removeDragClasses();
+            this.elementDragging?.addHoverClasses();
+        } else if (!detectedDropzoneHit) {
+            if (this.dropZoneHit) {
+                this.dropZoneHit.removeHoverClasses();
+                this.dropZoneHit.addDragClasses();
                 this.elementDragging?.removeHoverClasses();
                 this.elementDragging?.addDragClasses();
-                if (this.dropZoneHit) {
-                    dz.removeHoverClasses();
-                    dz.addDragClasses();
-                    this.dropZoneHit = undefined;
-                }
+                this.dropZoneHit = undefined;
             }
-        });
+        }
     }
 
     private actionOnDrop(element: iDraggableElement) {

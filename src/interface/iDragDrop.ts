@@ -1,8 +1,8 @@
+import iDraggableElement from "./iDraggableElements.js";
 import iDropZone from "./iDropZone.js";
 
 export default interface iDragAndDrop {
-    dropZoneHoverClass?: string[];
-    dropZoneClass?: string[];
-    dropZoneHit?: iDropZone;
+    dropZones: iDropZone[];
+    draggableElements: iDraggableElement[];
     Callback: (elementDragged: HTMLElement, dropZoneHit: HTMLElement) => void;
 }

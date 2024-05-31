@@ -17,7 +17,7 @@ export default class DragAndDrop implements iDragAndDrop {
     private pos2: number;
     private pos3: number;
     private pos4: number;
-    private elementDragging?: HTMLElement;
+    private elementDragging?: iDraggableElement;
     private mouseService: MouseService = new MouseService();
 
     Callback: (elementDragged: HTMLElement, dropZoneHit?: HTMLElement) => void;
@@ -46,7 +46,7 @@ export default class DragAndDrop implements iDragAndDrop {
             el.addEventListener('mousedown', (e) => {
                 this.pos3 = e.pageX;
                 this.pos4 = e.pageY;
-                this.elementDragging = el;
+                this.elementDragging = element;
                 el.style.width = el.offsetWidth + 'px';
                 el.style.height = el.offsetHeight + 'px';
                 element.createClone();
@@ -75,15 +75,19 @@ export default class DragAndDrop implements iDragAndDrop {
     }
 
     private detectDropZone() {
-        let dropZoneService = new DropZoneService();
+        const dropZoneService = new DropZoneService();
         this.dropZones.forEach((dz) => {
             dz.addDragClasses();
             let zonehit = dropZoneService.detectDropZone(dz, this.mouseService.getPosition());
             if (zonehit) {
+                this.elementDragging?.removeDragClasses();
+                this.elementDragging?.addHoverClasses();
                 dz.removeDragClasses();
                 dz.addHoverClasses();
                 this.dropZoneHit = dz;
             } else {
+                this.elementDragging?.removeHoverClasses();
+                this.elementDragging?.addDragClasses();
                 if (this.dropZoneHit) {
                     dz.removeHoverClasses();
                     dz.addDragClasses();
@@ -101,11 +105,12 @@ export default class DragAndDrop implements iDragAndDrop {
         element.destroyClone();
         this.dropZones.forEach((dr) => dr.removeDragClasses());
         if (this.elementDragging) {
-            this.elementDragging.style.cursor = 'grab';
-            this.elementDragging.style.top = "";
-            this.elementDragging.style.left = "";
-            this.elementDragging.style.position = 'static';
-            this.Callback(this.elementDragging, this.dropZoneHit?.element);
+            this.elementDragging.element.style.cursor = 'grab';
+            this.elementDragging.element.style.top = "";
+            this.elementDragging.element.style.left = "";
+            this.elementDragging.element.style.position = 'static';
+            this.elementDragging.removeHoverClasses();
+            this.Callback(this.elementDragging.element, this.dropZoneHit?.element);
             if (this.dropZoneHit) {
                 this.dropZoneHit.removeHoverClasses();
 
